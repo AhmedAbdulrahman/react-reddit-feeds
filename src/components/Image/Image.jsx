@@ -1,19 +1,43 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import Icon from "../Icon";
 import "./Image.css";
 
-const Image = ({ thumbnail, title }) => (
-  <img
-    className="thumbnail"
-    src={thumbnail}
-    alt={title}
-    onError={e => {
-      e.target.src =
-        "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==";
-    }}
-  />
-);
+class Image extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.fallback = () => {
+      if (this.props.fallbackSrc) {
+        this.setState({ failed: true });
+      }
+    };
+  }
+  render() {
+    const { title } = this.props;
+    let image;
+    if (this.state.failed) {
+      image = (
+        <img
+          className="thumbnail fallback"
+          alt={title}
+          src={this.props.fallbackSrc}
+        />
+      );
+    } else {
+      image = (
+        <img
+          src={this.props.src}
+          className="thumbnail"
+          alt={title}
+          onError={this.fallback}
+        />
+      );
+    }
+    return <div className="thumbnail-wrapper">{image}</div>;
+  }
+}
 
 Image.propTypes = {
   className: PropTypes.string,
