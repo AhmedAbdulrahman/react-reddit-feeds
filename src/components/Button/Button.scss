@@ -1,0 +1,31 @@
+$color-black: #3b4257;
+$color-white: #fff;
+$color-border: #ccd1dd;
+$red: #ff2d55;
+
+.button {
+  display: inline-block;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  color: $color-white;
+  font-family: inherit;
+  text-decoration: none;
+  margin: 0;
+  font-size: 15px;
+  padding: 12px 26px;
+  box-shadow: 1px 4px 13px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+.button:focus {
+  outline: 0;
+}
+.button:enabled {
+  cursor: pointer;
+}
+
+.type-normal {
+  background-color: $red;
+
+  &.interactive:hover {
+    background-color: darken($red, 15%);
+  }
+}
