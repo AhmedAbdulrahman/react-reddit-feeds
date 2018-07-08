@@ -1,0 +1,31 @@
+$red: #ff2d55;
+
+.description {
+  flex: 1;
+}
+.title {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #353434;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  width: 830px;
+}
+.meta {
+  font-size: 15px;
+}
+.date {
+  color: #cccfd7;
+}
+.author {
+  color: $red;
+  text-transform: capitalize;
+  font-weight: bold;
+}
+.category {
+  margin-left: 20px;
+  color: #cdd3df;
+  font-style: italic;
+}
