@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import Icon from "../Icon";
 import "./Image.css";
 
 class Image extends React.Component {
@@ -42,13 +41,17 @@ class Image extends React.Component {
 Image.propTypes = {
   className: PropTypes.string,
   thumbnail: PropTypes.string,
-  title: PropTypes.string
+  title: PropTypes.string,
+  src: PropTypes.string,
+  fallbackSrc: PropTypes.string
 };
 
 Image.defaultProps = {
   className: "",
   thumbnail: "",
-  title: ""
+  title: "",
+  src: "",
+  fallbackSrc: ""
 };
 
 export default Image;

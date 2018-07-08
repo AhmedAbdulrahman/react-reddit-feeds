@@ -6,10 +6,8 @@ const Input = ({ className, type, disabled, onChangeInput, ...props }) => (
   <input
     type={type}
     className={`input
-        ${disabled && ".disabled"}
         ${className}`}
-    disabled={disabled}
-    onClick={onChangeInput}
+    onChange={onChangeInput}
     {...props}
   />
 );
@@ -17,14 +15,12 @@ const Input = ({ className, type, disabled, onChangeInput, ...props }) => (
 Input.propTypes = {
   className: PropTypes.string,
   type: PropTypes.string,
-  disabled: PropTypes.bool,
   onChangeInput: PropTypes.func
 };
 
 Input.defaultProps = {
   className: "",
   type: "text",
-  disabled: false,
   onChangeInput: () => {}
 };
 

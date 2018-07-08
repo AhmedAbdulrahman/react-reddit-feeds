@@ -15,10 +15,6 @@ $color-border: #ccd1dd;
   appearance: none;
   resize: vertical;
 
-  &:invalid {
-    box-shadow: none;
-  }
-
   &::placeholder {
     color: $color-border;
     opacity: 1;
