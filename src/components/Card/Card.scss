@@ -1,0 +1,27 @@
+.item {
+  height: 110px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+}
+.details {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+}
+.score {
+  width: 61px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+
+  .count {
+    font-size: 18px;
+    color: #434343;
+    margin: 0;
+  }
+}
