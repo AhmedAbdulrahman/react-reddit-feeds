@@ -1,0 +1,42 @@
+.container {
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.1);
+  margin: 30px 0;
+}
+
+.form {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.options-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.form-control {
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subreddit-limit {
+  /* width: 20px; */
+  height: 27px;
+  border-radius: 30px;
+  padding: 0 20px;
+  /* -webkit-appearance: none; */
+  background: rgba(255, 65, 23, 0.14);
+  color: #ff4111;
+  font-size: 15px;
+  border: 1px solid #ff41175c;
+  box-shadow: 1px 2px 15px 0 rgba(0, 0, 0, 0.06);
+  margin-bottom: 10px;
+}
+
+.lastupdate {
+  color: rgba(0, 0, 0, 0.32);
+  font-size: 15px;
+}
