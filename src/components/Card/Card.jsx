@@ -5,7 +5,7 @@ import Description from "../Description";
 import Permalink from "../Description/Permalink";
 
 import { formatScore } from "../../utils";
-
+import fallBackImage from "../../reddit-icon.png";
 import "./Card.css";
 
 class Card extends React.Component {
@@ -14,7 +14,11 @@ class Card extends React.Component {
 
     return (
       <div className="item">
-        <Image thumbnail={subreddit.thumbnail} title={subreddit.title} />
+        <Image
+          src={subreddit.thumbnail}
+          title={subreddit.title}
+          fallbackSrc={fallBackImage}
+        />
         <Description
           author={subreddit.author}
           date={subreddit.created}
