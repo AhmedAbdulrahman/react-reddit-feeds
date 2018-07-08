@@ -13,7 +13,7 @@ class Card extends React.Component {
     const { subreddit } = this.props;
 
     return (
-      <div className="item">
+      <div className="item fadeInUp">
         <Image
           src={subreddit.thumbnail}
           title={subreddit.title}
