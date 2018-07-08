@@ -1,0 +1,10 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  background-color: color(var(--color-palegrey) shade(5%));
+}
+.wrapperContainer {
+  width: 1180px;
+  margin: 0 auto;
+}
