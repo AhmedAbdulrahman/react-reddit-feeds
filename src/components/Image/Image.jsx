@@ -14,12 +14,12 @@ class Image extends React.Component {
     };
   }
   render() {
-    const { title } = this.props;
+    const { title, wrapperClassName, thumbnailClassName } = this.props;
     let image;
     if (this.state.failed) {
       image = (
         <img
-          className="thumbnail fallback"
+          className={`thumbnail fallback ${thumbnailClassName}`}
           alt={title}
           src={this.props.fallbackSrc}
         />
@@ -28,13 +28,15 @@ class Image extends React.Component {
       image = (
         <img
           src={this.props.src}
-          className="thumbnail"
+          className={`thumbnail ${thumbnailClassName}`}
           alt={title}
           onError={this.fallback}
         />
       );
     }
-    return <div className="thumbnail-wrapper">{image}</div>;
+    return (
+      <div className={`thumbnail-wrapper ${wrapperClassName}`}>{image}</div>
+    );
   }
 }
 
@@ -43,7 +45,9 @@ Image.propTypes = {
   thumbnail: PropTypes.string,
   title: PropTypes.string,
   src: PropTypes.string,
-  fallbackSrc: PropTypes.string
+  fallbackSrc: PropTypes.string,
+  wrapperClassName: PropTypes.string,
+  thumbnailClassName: PropTypes.string
 };
 
 Image.defaultProps = {
@@ -51,7 +55,9 @@ Image.defaultProps = {
   thumbnail: "",
   title: "",
   src: "",
-  fallbackSrc: ""
+  fallbackSrc: "",
+  wrapperClassName: "",
+  thumbnailClassName: ""
 };
 
 export default Image;
