@@ -1,9 +1,10 @@
 import React from "react";
-import { request } from "../../utils";
+import { getSubreddits } from "../../utils";
 
 import Card from "../../components/Card";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
+import Spinner from "../../components/Spinner";
 
 import "./List.css";
 
@@ -13,8 +14,9 @@ class Posts extends React.Component {
     this.state = {
       posts: [],
       isFetching: false,
+      subreddit: "popular",
       searchTerm: "",
-      currentSub: "popular",
+      after: "",
       lastUpdated: "",
       limit: 25,
       error: ""
@@ -22,13 +24,21 @@ class Posts extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchPosts(this.state.currentSub, this.state.limit);
+    const { subreddit, limit } = this.state;
+    if (!localStorage.getItem("subreddit-data")) {
+      this.fetchSubreddits(subreddit, limit);
+    } else {
+      this.setState({
+        posts: JSON.parse(localStorage.getItem("subreddit-data"))
+      });
+    }
   }
 
-  onChangeOption = ({ target: { value: limit } }) => {
-    const { searchTerm, currentSub } = this.state;
-    this.setState({ limit });
-    this.fetchPosts(searchTerm || currentSub, limit);
+  handleOnChangeOption = ({ target: { value: limit } }) => {
+    const { subreddit, searchTerm } = this.state;
+    this.setState({ limit }, () =>
+      this.fetchSubreddits(searchTerm || subreddit, limit)
+    );
   };
 
   onChangeQuery = ({ target: { value: searchTerm } }) => {
@@ -37,40 +47,43 @@ class Posts extends React.Component {
 
   handleOnClick = e => {
     e.preventDefault();
-    const { searchTerm, currentSub, limit } = this.state;
-    this.fetchPosts(searchTerm || currentSub, limit);
+    const { limit, searchTerm } = this.state;
+    console.log(searchTerm);
+    if (searchTerm === "") return;
+    this.fetchSubreddits(searchTerm, limit);
   };
 
-  fetchPosts = (searchTerm, limit) => {
+  getNextPage = () => {
+    const { subreddit, after, limit, searchTerm } = this.state;
+    this.fetchSubreddits(searchTerm || subreddit, limit, after, "next");
+  };
+
+  getPrevPage = () => {
+    const { subreddit, limit, posts, searchTerm } = this.state;
+    const firstItem = posts[0].data.name;
+    console.log(firstItem);
+    this.fetchSubreddits(searchTerm || subreddit, limit, firstItem, "prev");
+  };
+
+  fetchSubreddits = async (subreddit, subredditID, limit, offset) => {
     this.setState({ isFetching: true });
-    request(`${searchTerm || "all"}.json?limit=${limit}`)
-      .then(({ error, data }) => {
-        if (error) {
-          console.log("error:", error);
-          this.setState({ error });
-        } else {
-          this.setState({
-            posts: data.children,
-            lastUpdated: Date.now(),
-            error: ""
-          });
-        }
-      })
-      .then(() => this.setState({ isFetching: false }));
+    const lists = await getSubreddits(subreddit, limit, subredditID, offset);
+    console.log(lists);
+    const { after, posts } = lists;
+    this.setState({
+      posts,
+      after,
+      lastUpdated: Date.now()
+    });
+    localStorage.setItem("subreddit-data", JSON.stringify(posts));
+    this.setState({ isFetching: false });
   };
 
   render() {
     const { limit, isFetching, posts, error, lastUpdated } = this.state;
-    // if (isFetching) {
-    //   return (
-    //     <div>
-    //       <h2 style={{ textAlign: "center" }}>Loading...</h2>
-    //     </div>
-    //   );
-    // }
     return (
       <React.Fragment>
-        <h1>Listing...</h1>
+        <h1>Reddit Feed Client</h1>
         <form className="form" onSubmit={e => e.preventDefault()}>
           <div className="form-control">
             <Input
@@ -87,7 +100,7 @@ class Posts extends React.Component {
             <select
               className="subreddit-limit"
               value={limit}
-              onChange={this.onChangeOption}
+              onChange={this.handleOnChangeOption}
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -102,9 +115,13 @@ class Posts extends React.Component {
         </form>
         {error && <p>We didn't find any results</p>}
 
-        {/* {isFetching && <h1>Fetching Posts ....</h1>} */}
         <div className="container">
+          {isFetching && <Spinner width="65px" height="65px" />}
           {posts.map((post, i) => <Card subreddit={post.data} key={i} />)}
+        </div>
+        <div className="pagination">
+          <Button onClick={this.getPrevPage}>Previous</Button>
+          <Button onClick={this.getNextPage}>Next</Button>
         </div>
       </React.Fragment>
     );
