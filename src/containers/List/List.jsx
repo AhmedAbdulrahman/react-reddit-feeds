@@ -14,31 +14,23 @@ class Posts extends React.Component {
     this.state = {
       posts: [],
       isFetching: false,
-      subreddit: "popular",
+      currentSubreddit: "popular",
       searchTerm: "",
       after: "",
       lastUpdated: "",
       limit: 25,
-      isError: false
+      isError: false,
+      notFound: false
     };
   }
 
   componentDidMount() {
-    const { subreddit, limit } = this.state;
-    if (!localStorage.getItem("subreddit-data")) {
-      this.fetchSubreddits(subreddit, limit);
-    } else {
-      this.setState({
-        posts: JSON.parse(localStorage.getItem("subreddit-data"))
-      });
-    }
+    const { limit } = this.state;
+    this.fetchSubreddits({ limit });
   }
 
   handleOnChangeOption = ({ target: { value: limit } }) => {
-    const { subreddit, searchTerm } = this.state;
-    this.setState({ limit }, () =>
-      this.fetchSubreddits(searchTerm || subreddit, limit)
-    );
+    this.setState({ limit }, () => this.fetchSubreddits({ limit }));
   };
 
   onChangeQuery = ({ target: { value: searchTerm } }) => {
@@ -47,35 +39,54 @@ class Posts extends React.Component {
 
   handleOnClick = e => {
     e.preventDefault();
-    const { limit, searchTerm, subreddit } = this.state;
+    const { limit, searchTerm } = this.state;
     if (searchTerm === "") return;
-    this.fetchSubreddits(searchTerm || subreddit, limit);
+    this.fetchSubreddits({ limit });
   };
 
   getNextPage = () => {
-    const { subreddit, after, limit, searchTerm } = this.state;
-    this.fetchSubreddits(searchTerm || subreddit, limit, after, "next");
+    const { after, limit } = this.state;
+    this.fetchSubreddits({
+      limit,
+      subredditID: after,
+      offset: "next"
+    });
   };
 
   getPrevPage = () => {
-    const { subreddit, limit, posts, searchTerm } = this.state;
+    const { limit, posts } = this.state;
     if (!posts.length > -1) {
-      const firstItem = posts[0].data.name;
-      this.fetchSubreddits(searchTerm || subreddit, limit, firstItem, "prev");
+      const subredditID = posts[0].data.name;
+      this.fetchSubreddits({
+        subredditID,
+        limit,
+        offset: "prev"
+      });
     }
   };
 
-  fetchSubreddits = async (subreddit, subredditID, limit, offset) => {
+  fetchSubreddits = async ({ subredditID, limit, offset }) => {
+    const { currentSubreddit, searchTerm } = this.state;
     try {
-      this.setState({ isFetching: true, isError: false });
-      const lists = await getSubreddits(subreddit, limit, subredditID, offset);
-      const { after, posts } = lists;
-      this.setState({
-        posts,
-        after,
-        lastUpdated: Date.now()
+      this.setState({ isFetching: true, isError: false, notFound: false });
+      const lists = await getSubreddits({
+        subreddit: searchTerm || currentSubreddit,
+        subredditID,
+        limit,
+        offset
       });
-      localStorage.setItem("subreddit-data", JSON.stringify(posts));
+      const { after, posts } = lists;
+      if (posts.length > 0) {
+        this.setState({
+          posts,
+          after,
+          lastUpdated: Date.now()
+        });
+      } else {
+        this.setState({
+          notFound: true
+        });
+      }
     } catch (e) {
       this.setState({ isError: true });
     } finally {
@@ -84,7 +95,14 @@ class Posts extends React.Component {
   };
 
   render() {
-    const { limit, isFetching, posts, isError, lastUpdated } = this.state;
+    const {
+      limit,
+      isFetching,
+      posts,
+      isError,
+      lastUpdated,
+      notFound
+    } = this.state;
     return (
       <React.Fragment>
         <h1>Reddit Feed Client</h1>
@@ -131,7 +149,7 @@ class Posts extends React.Component {
           {posts.map((post, i) => <Card subreddit={post.data} key={i} />)}
         </div>
         <div className="pagination">
-          <Button onClick={this.getPrevPage} disabled={isError && true}>
+          <Button onClick={this.getPrevPage} disabled={isError || notFound}>
             Prev
           </Button>
           <Button onClick={this.getNextPage} disabled={isError && true}>
