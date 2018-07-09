@@ -1,10 +1,19 @@
 const REDDIT = "https://www.reddit.com";
 
-// format Subreddit score
+/**
+ * @param  {number} score Post score
+ * @returns  Returns formated score numbers as 8.4K
+ */
 export const formatScore = num =>
   num > 999 ? (num / 1000).toFixed(1) + "k" : num;
 
-// Returns a list of posts from a subredd.
+/**
+ * @param  {string} subreddit Forum name
+ * @param  {string} subredditID Use if more posts wanted.
+ * @param  {number} limit Maximum number of items to return in this slice of the listing
+ * @param  {string} offset Use to check pagination type
+ * @returns  Returns a list of posts from a subreddit
+ */
 export const getSubreddits = async ({
   subreddit = "",
   subredditID = "",
@@ -29,7 +38,12 @@ export const getSubreddits = async ({
   return { after, posts: children };
 };
 
-// Returns single post from subreddit.
+/**
+ * @param  {string} sub Forum name
+ * @param  {string} author  Authored by name
+ * @param  {number} title Post title
+ * @returns  Returns single post from subreddit.
+ */
 export const getSubredditDetails = async params => {
   const res = await fetch(
     `${REDDIT}/r/${params.sub}/comments/${params.author}/${params.title}.json`
