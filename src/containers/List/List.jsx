@@ -85,7 +85,6 @@ class Posts extends React.Component {
 
   render() {
     const { limit, isFetching, posts, isError, lastUpdated } = this.state;
-    console.log(isError);
     return (
       <React.Fragment>
         <h1>Reddit Feed Client</h1>
