@@ -2,6 +2,7 @@ $color-black: #3b4257;
 $color-white: #fff;
 $color-border: #ccd1dd;
 $red: #ff2d55;
+$orange: #ff4500;
 
 .button {
   display: inline-block;
@@ -23,9 +24,19 @@ $red: #ff2d55;
 }
 
 .type-normal {
-  background-color: $red;
+  background-image: linear-gradient(to right, $red, $orange);
 
   &.interactive:hover {
-    background-color: darken($red, 15%);
+    background-color: linear-gradient(
+      to right,
+      darken($red, 15%),
+      darken($orange, 15%)
+    );
+  }
+  &.disabled {
+    cursor: not-allowed;
+    background-color: $color-white;
+    box-shadow: none;
+    opacity: 0.5;
   }
 }
