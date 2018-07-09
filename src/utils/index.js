@@ -12,7 +12,6 @@ export const getSubreddits = async (
   offset = "all"
 ) => {
   let url;
-  console.log(subreddit);
   switch (offset) {
     case "next":
       url = `${REDDIT}/r/${subreddit}.json?limit=${limit}&after=${subredditID}`;
@@ -24,14 +23,20 @@ export const getSubreddits = async (
       url = `${REDDIT}/r/${subreddit}.json?limit=${limit}`;
       break;
   }
-  try {
-    const res = await fetch(url);
-    const result = await res.json();
-    const { after, children } = result.data;
-    return { after, posts: children };
-  } catch (exception) {
-    console.error(`Failed to retrieve subreddit information: (${exception})`);
-  }
+  const res = await fetch(url);
+  const result = await res.json();
+  const { after, children } = result.data;
+  return { after, posts: children };
 };
 
 // Returns single post from subreddit.
+export const getSubredditDetails = async params => {
+  const res = await fetch(
+    `${REDDIT}/r/${params.sub}/comments/${params.author}/${params.title}.json`
+  );
+  const result = await res.json();
+  return {
+    content: result[0].data.children[0].data,
+    comments: result[1].data.children
+  };
+};
