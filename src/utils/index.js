@@ -5,12 +5,12 @@ export const formatScore = num =>
   num > 999 ? (num / 1000).toFixed(1) + "k" : num;
 
 // Returns a list of posts from a subredd.
-export const getSubreddits = async (
+export const getSubreddits = async ({
   subreddit = "",
   subredditID = "",
   limit = 25,
   offset = "all"
-) => {
+}) => {
   let url;
   switch (offset) {
     case "next":
