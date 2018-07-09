@@ -35,8 +35,9 @@ export const getSubredditDetails = async params => {
     `${REDDIT}/r/${params.sub}/comments/${params.author}/${params.title}.json`
   );
   const result = await res.json();
+  const comments = result[1].data.children.map(obj => obj.data);
   return {
     content: result[0].data.children[0].data,
-    comments: result[1].data.children
+    comments
   };
 };

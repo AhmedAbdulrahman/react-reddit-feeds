@@ -1,7 +1,8 @@
 import React from "react";
-import { getSubredditDetails } from "../../utils";
+import Image from "../../components/Image";
+import Comment from "../../components/Comment";
 
-import SinglePost from "../../components/Post";
+import { getSubredditDetails } from "../../utils";
 
 class Post extends React.Component {
   constructor(props) {
@@ -21,31 +22,20 @@ class Post extends React.Component {
     });
   }
 
-  getCommentChildren = comment => {
-    let { replies } = comment.data;
-    if (typeof replies === "object") {
-      return replies.data.children.map((comment, i) => {
-        return (
-          <div key={i}>
-            <span>{comment.data.score}</span>
-            <p>{comment.data.body}</p>
-            {this.getCommentChildren(comment)}
-          </div>
-        );
-      });
-    }
-  };
-
   render() {
-    var { content, comments } = this.state;
+    const { content, comments } = this.state;
     return (
-      <SinglePost
-        title={content.title}
-        selftext={content.selftext}
-        comments={comments}
-        renderComments={this.getCommentChildren}
-        thumbnail={content.thumbnail}
-      />
+      <div className="post">
+        <h1>{content.title}</h1>
+        {content.selftext && <div>{content.selftext}</div>}
+        <Image
+          title={content.title}
+          src={content.thumbnail}
+          wrapperClassName="post-thumnail"
+        />
+        <h3>Comments: ({content.num_comments})</h3>
+        <Comment comments={comments} />
+      </div>
     );
   }
 }
