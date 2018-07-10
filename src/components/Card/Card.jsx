@@ -4,7 +4,7 @@ import Image from "../Image";
 import Description from "../Description";
 import Permalink from "../Description/Permalink";
 
-import { formatScore } from "../../utils";
+import { formatScore, converGifvToGif } from "../../utils";
 import fallBackImage from "../../reddit-icon.png";
 import "./Card.css";
 
@@ -15,7 +15,7 @@ class Card extends React.Component {
     return (
       <div className="item fadeInUp">
         <Image
-          src={subreddit.thumbnail}
+          src={converGifvToGif(subreddit.url)}
           title={subreddit.title}
           fallbackSrc={fallBackImage}
         />
