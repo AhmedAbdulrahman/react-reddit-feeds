@@ -8,6 +8,14 @@ export const formatScore = num =>
   num > 999 ? (num / 1000).toFixed(1) + "k" : num;
 
 /**
+ * @param  {string} url Post URL
+ * @returns  Replace .gifv with .gif images extension
+ */
+export const converGifvToGif = url => {
+  return `${url.replace(".gifv", ".gif")}`;
+};
+
+/**
  * @param  {string} subreddit Forum name
  * @param  {string} subredditID Use if more posts wanted.
  * @param  {number} limit Maximum number of items to return in this slice of the listing
