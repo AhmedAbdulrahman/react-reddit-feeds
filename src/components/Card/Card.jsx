@@ -5,20 +5,22 @@ import Description from "../Description";
 import Permalink from "../Description/Permalink";
 
 import { formatScore, converGifvToGif } from "../../utils";
-import fallBackImage from "../../reddit-icon.png";
+import redditIcon from "../../reddit-icon.png";
 import "./Card.css";
 
 class Card extends React.Component {
   render() {
     const { subreddit } = this.props;
 
+    let imgURL = converGifvToGif({
+      url: subreddit.url,
+      domain: subreddit.domain
+    });
+    if (imgURL === null) imgURL = "";
+
     return (
-      <div className="item fadeInUp">
-        <Image
-          src={converGifvToGif(subreddit.url)}
-          title={subreddit.title}
-          fallbackSrc={fallBackImage}
-        />
+      <div className="item">
+        <Image src={imgURL} title={subreddit.title} fallbackSrc={redditIcon} />
         <Description
           author={subreddit.author}
           date={subreddit.created}
