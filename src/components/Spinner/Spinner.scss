@@ -1,6 +1,13 @@
 $offset: 187;
 $duration: 1.4s;
 
+.spinner-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-top: 50px;
+}
+
 .spinner {
   animation: rotator $duration linear infinite;
 }
