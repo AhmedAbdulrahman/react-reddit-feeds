@@ -34,10 +34,11 @@ class Comment extends React.Component {
     );
   };
   render() {
-    const { comments } = this.props;
+    const { comments, totalComments } = this.props;
 
     return (
       <div className="comment-wrapper">
+        <h3>Comments: ({totalComments})</h3>
         {comments && comments.map(c => this.renderComment(c))}
       </div>
     );
