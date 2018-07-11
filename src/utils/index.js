@@ -11,8 +11,20 @@ export const formatScore = num =>
  * @param  {string} url Post URL
  * @returns  Replace .gifv with .gif images extension
  */
-export const converGifvToGif = url => {
-  return `${url.replace(".gifv", ".gif")}`;
+export const converGifvToGif = ({ url, domain }) => {
+  let postURL;
+  if (domain === "gfycat.com") {
+    postURL = `${url.replace("gfycat", "thumbs.gfycat")}-size_restricted.gif`;
+    return postURL;
+  } else if (domain.includes("imgur")) {
+    postURL = `${url.replace(".gifv", ".gif")}`;
+    return postURL.substr(-4, 1) === "." ? postURL : `${postURL}.gif`;
+  } else if (domain === "i.redd.it") {
+    return url;
+  } else {
+    postURL = null;
+    return postURL;
+  }
 };
 
 /**
