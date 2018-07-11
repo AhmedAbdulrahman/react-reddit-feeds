@@ -20,13 +20,13 @@ class Posts extends React.Component {
       lastUpdated: "",
       limit: 25,
       isError: false,
-      notFound: false
+      notFound: false,
+      errorMessage: ""
     };
   }
 
   componentDidMount() {
-    const { limit } = this.state;
-    this.fetchSubreddits({ limit });
+    this.fetchSubreddits({});
   }
 
   handleOnChangeOption = ({ target: { value: limit } }) => {
@@ -41,56 +41,56 @@ class Posts extends React.Component {
     e.preventDefault();
     const { limit, searchTerm } = this.state;
     if (searchTerm === "") return;
-    this.fetchSubreddits({ limit });
+    this.fetchSubreddits({ limit, subreddit: searchTerm });
   };
 
+  // goto next page
   getNextPage = () => {
     const { after, limit } = this.state;
     this.fetchSubreddits({
       limit,
-      subredditID: after,
+      postName: after,
       offset: "next"
     });
   };
 
+  // goback to previous page
   getPrevPage = () => {
     const { limit, posts } = this.state;
     if (!posts.length > -1) {
-      const subredditID = posts[0].data.name;
+      const postName = posts[0].data.name;
       this.fetchSubreddits({
-        subredditID,
+        postName,
         limit,
         offset: "prev"
       });
     }
   };
 
-  fetchSubreddits = async ({ subredditID, limit, offset }) => {
-    const { currentSubreddit, searchTerm } = this.state;
+  fetchSubreddits = async ({ subreddit, postName, limit, offset }) => {
     try {
       this.setState({ isFetching: true, isError: false, notFound: false });
-      const lists = await getSubreddits({
-        subreddit: searchTerm || currentSubreddit,
-        subredditID,
+
+      const { after, posts } = await getSubreddits({
+        subreddit,
+        postName,
         limit,
         offset
       });
-      const { after, posts } = lists;
-      if (posts.length > 0) {
-        this.setState({
-          posts,
-          after,
-          lastUpdated: Date.now()
-        });
-      } else {
-        this.setState({
-          notFound: true
-        });
-      }
-    } catch (e) {
-      this.setState({ isError: true });
+      this.setState({
+        posts,
+        after,
+        lastUpdated: Date.now()
+      });
+    } catch (error) {
+      this.setState({
+        isError: true,
+        errorMessage: error.message
+      });
     } finally {
-      this.setState({ isFetching: false });
+      this.setState({
+        isFetching: false
+      });
     }
   };
 
@@ -100,6 +100,7 @@ class Posts extends React.Component {
       isFetching,
       posts,
       isError,
+      errorMessage,
       lastUpdated,
       notFound
     } = this.state;
@@ -137,7 +138,7 @@ class Posts extends React.Component {
         </form>
         {isError && (
           <p>
-            Ayyyy, subreddit not found{" "}
+            Ayyyy, {errorMessage}
             <span role="img" aria-label="sad">
               😿
             </span>

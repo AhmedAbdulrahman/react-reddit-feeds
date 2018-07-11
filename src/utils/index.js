@@ -29,33 +29,39 @@ export const converGifvToGif = ({ url, domain }) => {
 
 /**
  * @param  {string} subreddit Forum name
- * @param  {string} subredditID Use if more posts wanted.
+ * @param  {string} postName Use if more posts wanted.
  * @param  {number} limit Maximum number of items to return in this slice of the listing
  * @param  {string} offset Use to check pagination type
  * @returns  Returns a list of posts from a subreddit
  */
 export const getSubreddits = async ({
-  subreddit = "",
-  subredditID = "",
+  subreddit = "popular",
+  postName = "",
   limit = 25,
-  offset = "all"
+  offset = ""
 }) => {
   let url;
   switch (offset) {
     case "next":
-      url = `${REDDIT}/r/${subreddit}.json?limit=${limit}&after=${subredditID}`;
+      url = `${REDDIT}/r/${subreddit}.json?limit=${limit}&after=${postName}`;
       break;
     case "prev":
-      url = `${REDDIT}/r/${subreddit}.json?limit=${limit}&before=${subredditID}`;
+      url = `${REDDIT}/r/${subreddit}.json?limit=${limit}&before=${postName}`;
       break;
     default:
       url = `${REDDIT}/r/${subreddit}.json?limit=${limit}`;
       break;
   }
+
   const res = await fetch(url);
-  const result = await res.json();
-  const { after, children } = result.data;
-  return { after, posts: children };
+  const json = await res.json();
+  if (res.status !== 200) throw Error(json.message);
+
+  const { after, children } = json.data;
+  const posts = children.filter(post => {
+    return !post.data.is_self && post.data.preview;
+  });
+  return { after, posts };
 };
 
 /**
