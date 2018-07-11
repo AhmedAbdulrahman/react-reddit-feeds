@@ -9,6 +9,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-player": "^1.6.4",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "react-treeview": "^0.4.7",
